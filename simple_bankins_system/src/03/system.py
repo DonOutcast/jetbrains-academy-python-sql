@@ -1,5 +1,44 @@
-#!/usr/bin/env python3
 import random
+import sqlite3 as sq
+
+
+class Database:
+    """For database"""
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.base = sq.connect(f"{self.name}")
+        self.cur = self.base.cursor()
+
+    def create_table_complex(self):
+        if self.base:
+            query = """CREATE TABLE IF NOT EXISTS 
+                        card (id INTEGER PRIMARY KEY AUTOINCREMENT,      
+                                 number TEXT,
+                                 pin TEXT,
+                                 balance INTEGER DEFAULT 0
+                                 )"""
+            self.cur.execute(query)
+            self.base.commit()
+
+    def add_information(self, card_number, card_pin):
+        query = """INSERT INTO card (number, pin) VALUES (
+        ?,?)"""
+        self.cur.execute(query, (card_number, card_pin))
+        self.base.commit()
+
+    def check_user(self, card_number, card_pin):
+        query = """SELECT pin FROM card WHERE number=?"""
+        check_pin = self.cur.execute(query, (card_number,)).fetchone()
+        return card_pin == check_pin
+
+    def get_balance(self, card_number):
+        query = """SELECT balance FROM card WHERE number=? """
+        get = self.cur.execute(query, (card_number,)).fetchone()
+        self.base.close()
+        return get
+
+
+
 
 
 class Bank:
@@ -63,6 +102,8 @@ class Bank:
         return user_input
 
 
+user_db = Database("card.s3db")
+user_db.create_table_complex()
 cards = []
 passwords = []
 answer = 1
@@ -74,18 +115,21 @@ while answer != 0:
         if new_card not in cards:
             cards.append(new_card)
             passwords.append(new_user.gen_password())
+            user_db.add_information(cards[-1], passwords[-1])
             print("Your card has been created")
             print(f"Your card number:\n{cards[-1]}")
             print(f"Enter your PIN:\n{passwords[-1]}")
     elif answer == 2:
         check = new_user.get_log()
-        if check[0] not in cards or check[1] not in passwords:
+        # if check[0] not in cards or check[1] not in passwords:
+        if user_db.check_user(check[0], check[1]):
             print("Wrong card number or PIN!")
         else:
             print("You have successfully logged in!")
             log_answer = new_user.get_log_menu()
             if log_answer == 1:
-                print("Balance: 0")
+                val = user_db.get_balance(check[0])
+                print(val[0])
             elif log_answer == 2:
                 print("You have successfully logged out!")
             else:
