@@ -27,10 +27,13 @@ class Database:
         self.base.commit()
 
     def check_user(self, card_number, card_pin):
+        print(card_pin)
         query = """SELECT pin FROM card WHERE number=?"""
         check_pin = self.cur.execute(query, (card_number,)).fetchone()
-        return card_pin == check_pin
-
+        if check_pin is not None:
+            return card_pin == check_pin[0]
+        else:
+            return False
     def get_balance(self, card_number):
         query = """SELECT balance FROM card WHERE number=? """
         get = self.cur.execute(query, (card_number,)).fetchone()
@@ -62,18 +65,17 @@ class Bank:
         number_one = "4"
         number_two_seven = "00000"
         number_last = 0
-        # account_number = [random.randint(0, 9) for _ in range(9)]
         account_number = str(random.randint(0, 999999999)).zfill(9)
-        card_number  = number_one + number_two_seven + account_number
+        card_number = number_one + number_two_seven + account_number
         check_card_numbers = list(int(i) for i in card_number)
         temp = 0
         for j in range(len(check_card_numbers)):
             if j % 2 == 0 and check_card_numbers[j] != 0:
                 check_card_numbers[j] *= 2
             if check_card_numbers[j] > 9:
-                check_card_numbers[j] -=9
+                check_card_numbers[j] -= 9
             temp += check_card_numbers[j]
-        if number_last % 10 != 0:
+        if temp % 10 != 0:
             number_last = 10 - temp % 10
         card_number += str(number_last)
         return card_number
@@ -121,8 +123,8 @@ while answer != 0:
             print(f"Enter your PIN:\n{passwords[-1]}")
     elif answer == 2:
         check = new_user.get_log()
-        # if check[0] not in cards or check[1] not in passwords:
-        if user_db.check_user(check[0], check[1]):
+        # print(user_db.check_user(check[0], check[1]), "seeee <<<<<")
+        if not user_db.check_user(check[0], check[1]):
             print("Wrong card number or PIN!")
         else:
             print("You have successfully logged in!")
@@ -137,3 +139,4 @@ while answer != 0:
     answer = new_user.get_menu()
 else:
     print("Bye!")
+
