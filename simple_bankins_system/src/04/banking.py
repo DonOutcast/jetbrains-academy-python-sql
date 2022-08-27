@@ -10,6 +10,31 @@ handler = StreamHandler(stream=sys.stdout)
 handler.setFormatter(Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
 logger.addHandler(handler)
 
+def transfer_card(card_number):
+    length = len(card_number)
+    number_one = card_number[:1]
+    # logger.info(f"See cut {number_one}")
+    number_two_seven =  card_number[1:6]
+    # logger.info(f"Second cut {number_two_seven}")
+    number_last_card = card_number[length - 1:]
+    # logger.info(f"Three cut {number_last_card}")
+    card_number = card_number[:length - 1]
+    number_last = ""
+    # print(card_number)
+    check_card_numbers = list(int(i) for i in card_number)
+    temp = 0
+    for j in range(len(check_card_numbers)):
+        if j % 2 == 0 and check_card_numbers[j] != 0:
+            check_card_numbers[j] *= 2
+        if check_card_numbers[j] > 9:
+            check_card_numbers[j] -= 9
+        temp += check_card_numbers[j]
+    if temp % 10 != 0:
+        number_last = 10 - temp % 10
+    return True if number_last == int(number_last_card) else False
+
+
+
 
 class Database:
     """For database"""
@@ -62,7 +87,18 @@ class Database:
         get = self.cur.execute(query, (card_number,)).fetchone()
         logger.info(f"Finaly summary {get}")
 
+    def check_card_transfer(self, card_number):
+        pass
 
+
+    def delete_card(self, card_number):
+        logger.info(f"Card_number {card_number}")
+        query = """DELETE FROM card WHERE number=?"""
+        # get = self.cur.execute(query, (card_number,))
+        query = """SELECT * FROM card WHERE number=? """
+        get = self.cur.execute(query, (card_number,)).fetchone()
+        # logger.info(f"Check database {get}")
+        self.base.commit()
 
 
 class Bank:
@@ -156,8 +192,11 @@ while answer != 0:
             elif log_answer == 2:
                 print("Enter income:")
                 many = int(input())
-                user_db.add_balance(check[0],many)
+                user_db.add_balance(check[0], many)
                 print("Income was added!")
+            elif log_answer == 4:
+                user_db.delete_card(check[0])
+                print("The account has been closed!")
             elif log_answer == 5:
                 print("You have successfully logged out!")
             else:
@@ -165,4 +204,5 @@ while answer != 0:
     answer = new_user.get_menu()
 else:
     print("Bye!")
+
 
