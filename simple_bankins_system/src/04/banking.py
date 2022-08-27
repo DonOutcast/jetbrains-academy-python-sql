@@ -10,28 +10,8 @@ handler = StreamHandler(stream=sys.stdout)
 handler.setFormatter(Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
 logger.addHandler(handler)
 
-def transfer_card(card_number):
-    length = len(card_number)
-    number_one = card_number[:1]
-    # logger.info(f"See cut {number_one}")
-    number_two_seven =  card_number[1:6]
-    # logger.info(f"Second cut {number_two_seven}")
-    number_last_card = card_number[length - 1:]
-    # logger.info(f"Three cut {number_last_card}")
-    card_number = card_number[:length - 1]
-    number_last = ""
-    # print(card_number)
-    check_card_numbers = list(int(i) for i in card_number)
-    temp = 0
-    for j in range(len(check_card_numbers)):
-        if j % 2 == 0 and check_card_numbers[j] != 0:
-            check_card_numbers[j] *= 2
-        if check_card_numbers[j] > 9:
-            check_card_numbers[j] -= 9
-        temp += check_card_numbers[j]
-    if temp % 10 != 0:
-        number_last = 10 - temp % 10
-    return True if number_last == int(number_last_card) else False
+
+
 
 
 
@@ -87,7 +67,13 @@ class Database:
         get = self.cur.execute(query, (card_number,)).fetchone()
         logger.info(f"Finaly summary {get}")
 
-    def check_card_transfer(self, card_number):
+    def have_card(self, card_number) -> bool:
+        query = """SELECT number FROM card WHERE number=?"""
+        get = self.cur.execute(query, (card_number,)).fetchone()
+        logger.info(f"Type card in data base {get}")
+        return True if get is not None else False
+
+    def transfer(self, card_number, summary):
         pass
 
 
@@ -160,14 +146,37 @@ class Bank:
         user_input = int(input())
         return user_input
 
+    @staticmethod
+    def transfer_card(card_number):
+        length = len(card_number)
+        number_one = card_number[:1]
+        # logger.info(f"See cut {number_one}")
+        number_two_seven =  card_number[1:6]
+        # logger.info(f"Second cut {number_two_seven}")
+        number_last_card = card_number[length - 1:]
+        # logger.info(f"Three cut {number_last_card}")
+        card_number = card_number[:length - 1]
+        number_last = ""
+        # print(card_number)
+        check_card_numbers = list(int(i) for i in card_number)
+        temp = 0
+        for j in range(len(check_card_numbers)):
+            if j % 2 == 0 and check_card_numbers[j] != 0:
+                check_card_numbers[j] *= 2
+            if check_card_numbers[j] > 9:
+                check_card_numbers[j] -= 9
+            temp += check_card_numbers[j]
+        if temp % 10 != 0:
+            number_last = 10 - temp % 10
+        return True if number_last == int(number_last_card) else False
 
 user_db = Database("card.s3db")
 user_db.create_table_complex()
 cards = []
 passwords = []
-answer = 1
 new_user = Bank("Shamil")
 answer = new_user.get_menu()
+flag = 0
 while answer != 0:
     if answer == 1:
         new_card = new_user.gen_numbers_of_card()
@@ -178,7 +187,7 @@ while answer != 0:
             print("Your card has been created")
             print(f"Your card number:\n{cards[-1]}")
             print(f"Enter your PIN:\n{passwords[-1]}")
-    elif answer == 2:
+    elif answer == 2 and flag != 2:
         check = new_user.get_log()
         # print(user_db.check_user(check[0], check[1]), "seeee <<<<<")
         if not user_db.check_user(check[0], check[1]):
@@ -189,11 +198,33 @@ while answer != 0:
             if log_answer == 1:
                 val = user_db.get_balance(check[0])
                 print(val[0])
+                flag = 2
+                answer = 2
+                log_answer = new_user.get_log_menu()
             elif log_answer == 2:
                 print("Enter income:")
                 many = int(input())
                 user_db.add_balance(check[0], many)
                 print("Income was added!")
+            elif log_answer == 3:
+                print("Enter card number:")
+                user_input = input()
+                if new_user.transfer_card(user_input):
+                    if user_db.have_card(user_input):
+                        print("Enter how much money you want to transfer:")
+                        user_input = input()
+                        if user_input > str(user_db.get_balance(check[0])):
+                            print("Not enough money!")
+                            log_answer = new_user.get_log_menu()
+                        else:
+                            print("Success!")
+                    else:
+                        print("Such a card does not exist.4000000903533646")
+                        log_answer = new_user.get_log_menu()
+                else:
+                    print("Probably you made a mistake in the card number. Please try again!")
+                    flag = 2
+                    log_answer = new_user.get_log_menu()
             elif log_answer == 4:
                 user_db.delete_card(check[0])
                 print("The account has been closed!")
@@ -201,7 +232,8 @@ while answer != 0:
                 print("You have successfully logged out!")
             else:
                 break
-    answer = new_user.get_menu()
+    if flag != 2:
+        answer = new_user.get_menu()
 else:
     print("Bye!")
 
