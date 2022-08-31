@@ -11,11 +11,6 @@ handler.setFormatter(Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
 logger.addHandler(handler)
 
 
-
-
-
-
-
 class Database:
     """For database"""
     def __init__(self, name: str) -> None:

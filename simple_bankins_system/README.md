@@ -1,12 +1,12 @@
 # Work on project Simple Banking System
-Description
+## Part 1 Description
 We live busy lives these days. Between work, chores, and other things on our to-do lists, it can be tough to catch your breath and stay calm. Credit cards are one of the things that save us time, energy, and nerves. From not having to carry a wallet full of cash to consumer protection, cards make our lives easier in many ways. In this project, you will develop a simple banking system with a database.
 
 If you’re curious about business, technology, or how things around you work, you'll probably enjoy learning how credit card numbers work. These numbers ensure easy payments, and they also help prevent payment errors and fraud. Card numbers are evolving, and they might look different in the near future.
 
 Let's take a look at the anatomy of a credit card:
 
-
+![card_screen](misc/images/cron1.png)
 
 The very first digit is the Major Industry Identifier (MII), which tells you what sort of institution issued the card.
 
@@ -36,7 +36,7 @@ In our banking system, the customer account number can be any, but it should be 
 
 The very last digit of a credit card is the check digit or checksum. It is used to validate the credit card number using the Luhn algorithm, which we will explain in the next stage of this project. For now, the checksum can be any digit you like.
 
-Objectives
+## Objectives
 You should allow customers to create a new account in our banking system.
 
 Once the program starts, you should print the menu:
@@ -50,7 +50,7 @@ If the customer chooses ‘Log into account’, you should ask them to enter the
 
 After all information is entered correctly, you should allow the user to check the account balance; right after creating the account, the balance should be 0. It should also be possible to log out of the account and exit the program.
 
-Example
+## Example
 The symbol > represents the user input. Notice that it's not a part of the input.
 
 1. Create an account
@@ -108,7 +108,8 @@ You have successfully logged out!
 >0
 
 Bye!
-Description
+# Luhn algorithm
+## Part 2 Description
 In this stage, we will find out what the purpose of the checksum is and what the Luhn algorithm is used for.
 
 The main purpose of the check digit is to verify that the card number is valid. Say you're buying something online, and you type in your credit card number incorrectly by accidentally swapping two digits, which is one of the most common errors. When the website looks at the number you've entered and applies the Luhn algorithm to the first 15 digits, the result won't match the 16th digit on the number you entered. The computer knows the number is invalid, and it knows the number will be rejected if it tries to submit the purchase for approval, so you're asked to re-enter the number. Another purpose of the check digit is to catch clumsy attempts to create fake credit card numbers. Those who are familiar with the Luhn algorithm, however, could get past this particular security measure.
@@ -121,6 +122,7 @@ While the algorithm can be used to verify other identification numbers, it is us
 
 Here is how it works for a credit card with the number 4000008449433403:
 
+![luna_algoritm](misc/images/cron2.png)
 
 
 If the received number is divisible by 10 with the remainder equal to zero, then this number is valid; otherwise, the card number is not valid. When registering in your banking system, you should generate cards with numbers that are checked by the Luhn algorithm. You know how to check the card for validity. But how do you generate a card number so that it passes the validation test? It's very simple!
@@ -133,7 +135,7 @@ Therefore, the checksum is 3. So the total number of the generated card is 40000
 
 You need to change the credit card generation algorithm so that card numbers pass the Luhn algorithm.
 
-Objectives
+## Objectives
 You should allow customers to create a new account in our banking system.
 
 Once the program starts you should print the menu:
@@ -148,7 +150,7 @@ If the customer chooses ‘Log into account’, you should ask to enter the card
 
 After the information has been entered correctly, you should allow the user to check the account balance; after creating the account, the balance should be 0. It should also be possible to log out of the account and exit the program.
 
-Example
+## Example
 The symbol > represents the user input. Notice that it's not a part of the input.
 
 1. Create an account
@@ -207,8 +209,8 @@ You have successfully logged out!
 
 Bye!
 
-## Part 3 I'm so lite.
-Description
+#  I'm so lite.
+## Part 3 Description
 It's very upsetting when the data about registered users disappears after the program is completed. To avoid this problem, you need to create a database where you will store all the necessary information about the created credit cards. We will use SQLite to create the database.
 
 SQLite is a database engine. It is software that allows users to interact with a relational database. In SQLite, a database is stored in a single file — a trait that distinguishes it from other database engines. This allows for greater accessibility: copying a database is no more complicated than copying the file that stores the data, and sharing a database implies just sending an email attachment.
@@ -247,7 +249,7 @@ balance INTEGER DEFAULT 0
 Pay attention: your database file should be created when the program starts if it hasn’t yet been created. And all created cards should be stored in the database from now.
 
 Do not forget to commit your DB changes right after executing a query!
-Example
+## Example
 The symbol > represents the user input. Notice that it's not a part of the input.
 
 1. Create an account
@@ -298,6 +300,223 @@ Balance: 0
 >2
 
 You have successfully logged out!
+
+1. Create an account
+2. Log into account
+0. Exit
+>0
+
+Bye!
+
+# Advanced system
+## Part 4 Description
+You have created the foundation of our banking system. Now let's take the opportunity to deposit money into an account, make transfers and close an account if necessary.
+
+Now your menu should look like this:
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+If the user asks for Balance, you should read the balance of the account from the database and output it into the console.
+
+Add income item should allow us to deposit money to the account.
+
+Do transfer item should allow transferring money to another account. You should handle the following errors:
+
+If the user tries to transfer more money than he/she has, output: Not enough money!
+If the user tries to transfer money to the same account, output the following message: You can't transfer money to the same account!
+If the receiver's card number doesn’t pass the Luhn algorithm, you should output: Probably you made a mistake in the card number. Please try again!
+If the receiver's card number doesn’t exist, you should output: Such a card does not exist.
+If there is no error, ask the user how much money they want to transfer and make the transaction.
+If the user chooses the Close account item, you should delete that account from the database.
+
+Do not forget to commit your DB changes right after executing a query!
+## Examples
+The symbol > represents the user input. Notice that it's not a part of the input.
+
+- Example 1:
+
+1. Create an account
+2. Log into account
+0. Exit
+>1
+
+Your card has been created
+Your card number:
+4000009455296122
+Your card PIN:
+1961
+
+1. Create an account
+2. Log into account
+0. Exit
+>1
+
+Your card has been created
+Your card number:
+4000003305160034
+Your card PIN:
+5639
+
+1. Create an account
+2. Log into account
+0. Exit
+>2
+
+Enter your card number:
+>4000009455296122
+Enter your PIN:
+>1961
+
+You have successfully logged in!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>2
+
+Enter income:
+>10000
+Income was added!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>1
+
+Balance: 10000
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>3
+
+Transfer
+Enter card number:
+>4000003305160035
+Probably you made a mistake in the card number. Please try again!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>3
+
+Transfer
+Enter card number:
+>4000003305061034
+Such a card does not exist.
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>3
+
+Transfer
+Enter card number:
+>4000003305160034
+Enter how much money you want to transfer:
+>15000
+Not enough money!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>3
+
+Transfer
+Enter card number:
+>4000003305160034
+Enter how much money you want to transfer:
+>5000
+Success!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>1
+
+Balance: 5000
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+
+>0
+Bye!
+
+-Example 2:
+
+1. Create an account
+2. Log into account
+0. Exit
+>1
+
+Your card has been created
+Your card number:
+4000007916053702
+Your card PIN:
+6263
+
+1. Create an account
+2. Log into account
+0. Exit
+>2
+
+Enter your card number:
+>4000007916053702
+Enter your PIN:
+>6263
+
+You have successfully logged in!
+
+1. Balance
+2. Add income
+3. Do transfer
+4. Close account
+5. Log out
+0. Exit
+>4
+
+The account has been closed!
+
+1. Create an account
+2. Log into account
+0. Exit
+>2
+
+Enter your card number:
+>4000007916053702
+Enter your PIN:
+>6263
+
+Wrong card number or PIN!
 
 1. Create an account
 2. Log into account
