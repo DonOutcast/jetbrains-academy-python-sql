@@ -46,3 +46,62 @@ Computer pieces: [[0, 2], [3, 6], [4, 4], [3, 5], [1, 5], [0, 3], [2, 5]]
 Player pieces: [[1, 3], [1, 4], [4, 5], [1, 6], [1, 1], [0, 4]]
 Domino snake: [[5, 5]]
 Status: computer
+# Part 2
+Description
+A good game needs a good interface. In this stage, you will make your output user-friendly.
+
+The player should be able to see the domino snake, the so-called playing field, and their own pieces. It's a good idea to enumerate these pieces because throughout the game the player will be selecting them to make a move.
+
+Two things must remain hidden from the player: the stock pieces and the computer's pieces. The player should not be able to see them, only the number of pieces remaining.
+
+Objectives
+Print the header using seventy equal sign characters (=).
+Print the number of dominoes remaining in the stock – Stock size: [number].
+Print the number of dominoes the computer has – Computer pieces: [number].
+Print the domino snake. At this stage, it consists of the only starting piece.
+Print the player's pieces, Your pieces:, and then one piece per line, enumerated.
+Print the status of the game:
+If status = "computer", print "Status: Computer is about to make a move. Press Enter to continue..."
+If status = "player", print "Status: It's your turn to make a move. Enter your command."
+Note that both these statuses suppose that the next move will be made, but at this stage, the program should stop here. We will implement other statuses (like "win", "lose", and "draw") in the stages to come.
+Examples
+Example 1
+
+The player makes the first move (status = "player")
+
+======================================================================
+Stock size: 14
+Computer pieces: 6
+
+[6, 6]
+
+Your pieces:
+1:[0, 6]
+2:[5, 5]
+3:[4, 4]
+4:[4, 6]
+5:[0, 1]
+6:[0, 5]
+7:[1, 6]
+
+Status: It's your turn to make a move. Enter your command.
+
+Example 2
+
+The Computer makes the first move (status = "computer")
+
+======================================================================
+Stock size: 14
+Computer pieces: 7
+
+[5, 5]
+
+Your pieces:
+1:[1, 3]
+2:[1, 4]
+3:[4, 5]
+4:[1, 6]
+5:[1, 1]
+6:[0, 4]
+
+Status: Computer is about to make a move. Press Enter to continue...
