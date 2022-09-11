@@ -19,57 +19,44 @@ def pieces() -> list:
     """This is function retunr list of domino"""
     global domino
     pieces = []
-    for i in range(8):
+    for i in range(7):
         for_delete_and_push = random.choice(domino)
         pieces.append(for_delete_and_push)
         domino.remove(for_delete_and_push)
-    # print(domino)
-    # print()
-    # print()
-    # print(pieces)
     return pieces
 
-domino = init_domino()
 
-i = pieces()
-j = pieces()
-max_i = []
-max_j = []
-big = []
+def check_have_snacke(spisok: list) -> list:
+    flag = 0
+    while flag != 1:
+        spisok = pieces()
+        for i in spisok:
+            if i[0] == i[1]:
+                flag = 1
+    return spisok
 
-def where_max(pieces_1, pieces_2) -> list:
-    max_i = []
-    max_j = []
-    temp_i = pieces_1[0]
-    temp_j = pieces_2[0]
-    snake = []
-    for i in pieces_1:
-        if temp_i[0]  < i[0] and :
-            temp_i = i;
-    for l in pieces_1:
-        if temp_i[1] < i[1] and temp_i[0]  >= i[0]:
+def max_element(spisok_1) -> list:
+    temp_i = []
+    for i in spisok_1:
+        if i[0] == i[1]:
             temp_i = i
+    return temp_i
+def get_snacke(spisok_1, spisok_2) -> list:
+    global i, j
+    if spisok_1[0] > spisok_2[0]:
+        return i.pop(i.index(spisok_1))
+    return j.pop(j.index(spisok_2))
 
-    max_i.append(temp_i)
-    # for j in pieces_2:
-    #     if temp_j[0] < j[0] and temp_j[1] < j[1]:
-            # temp_j = j
-            # if temp_j[1] < j[1]:
-                # temp_j = j
-    # max_j.append(temp_j)
-    print("I ",max_i)
-    print("J" ,max_j)
-
-
-for (k ,l) in zip(i, j):
-    print(k, l)
-
-print()
-where_max(i, j)
-
-
-# print(pieces(i), "\n")
-# print(pieces(i), "\n")
-# print(i, "\n")
-
-
+domino = init_domino()
+i = check_have_snacke(pieces())
+j = check_have_snacke(pieces())
+print(get_snacke(max_element(i), max_element(j)))
+print("Stock pieces: ", domino)
+print("Comouter pieces: ",i)
+print("Player pieces: ",j)
+if len(i) > len(j):
+    status = "Computer"
+else:
+    status = "Player"
+print("Status: ", status )
+print(type(i[0]))
