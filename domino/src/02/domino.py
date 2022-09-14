@@ -52,17 +52,29 @@ def get_snake(spisok_1, spisok_2) -> list:
         return i.pop(i.index(spisok_1))
     return j.pop(j.index(spisok_2))
 
+def output_pieces(spisok: list) -> None:
+    count = 1
+    for i in range(len(spisok)):
+        print(str(count)+":"+str(spisok[i]))
+        count += 1
+
 domino = init_domino()
 i = check_have_snacke()
 j = check_have_snacke()
 temp = []
+print("=" * 70)
 temp.append(get_snake(max_element(i), max_element(j)))
-print("Stock pieces: ", domino)
-print("Comouter pieces: ",i)
-print("Player pieces: ",j)
+print("Stock pieces: ", len(domino))
+print("Comouter pieces: ", len(i))
+print()
+print(temp, '\n')
+print("Your pieces: ")
+output_pieces(j)
 if len(i) > len(j):
-    status = "Computer"
+    status = "Computer is about to make a move. Press Enter to continue..."
 else:
-    status = "Player"
-print("Domino snake: ", temp)
+    status = "Status: It's your turn to make a move. Enter your command."
 print("Status: ", status )
+
+
+
