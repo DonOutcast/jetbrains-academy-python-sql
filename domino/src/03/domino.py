@@ -58,23 +58,48 @@ def output_pieces(spisok: list) -> None:
         print(str(count)+":"+str(spisok[i]))
         count += 1
 
+
+def choice_element(spisok: list, flag: bool) -> list:
+    """This is function"""
+    pass
+
+def print_game(spisok: list) -> None:
+    print()
+    for i in range(len(spisok)):
+        print(spisok[i], end='')
+    print()
+    print()
+
+
 domino = init_domino()
 i = check_have_snacke()
 j = check_have_snacke()
+user_answer = 0
 temp = []
-print("=" * 70)
 temp.append(get_snake(max_element(i), max_element(j)))
-print("Stock pieces: ", len(domino))
-print("Comouter pieces: ", len(i))
-print()
-print(temp, '\n')
-print("Your pieces: ")
-output_pieces(j)
-if len(i) > len(j):
-    status = "Computer is about to make a move. Press Enter to continue..."
-else:
-    status = "Status: It's your turn to make a move. Enter your command."
-print("Status: ", status )
+while user_answer != "8":
+    print("=" * 70)
+    print("Stock pieces: ", len(domino))
+    print("Comouter pieces: ", len(i))
+    print_game(temp)
+    print("Your pieces: ")
+    output_pieces(j)
+    if len(i) > len(j):
+        status = "Computer is about to make a move. Press Enter to continue..."
+    else:
+        status = "Status: It's your turn to make a move. Enter your command."
+    print("Status: ", status )
+    user_answer = input()
+    if user_answer != '':
+        if len(j):
+            temp.append(j.pop(int(user_answer) - 1))
+    else:
+        if len(i):
+            temp.append(i.pop(random.randint(0,len(i) - 1)))
+
+
+
+
 
 
 
