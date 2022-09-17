@@ -77,7 +77,7 @@ j = check_have_snacke()
 user_answer = 0
 temp = []
 temp.append(get_snake(max_element(i), max_element(j)))
-while user_answer != "8":
+while len(i) >= 0 and len(j) >= 0:
     print("=" * 70)
     print("Stock pieces: ", len(domino))
     print("Comouter pieces: ", len(i))
@@ -89,14 +89,26 @@ while user_answer != "8":
     else:
         status = "Status: It's your turn to make a move. Enter your command."
     print("Status: ", status )
+    while True:
     user_answer = input()
+    if user_answer > len(j) of < -len(j):
+        print()
     if user_answer != '':
         if len(j):
-            temp.append(j.pop(int(user_answer) - 1))
+            if int(user_answer) > 0:
+                temp.append(j.pop(int(user_answer) - 1))
+            else:
+                temp.insert(0,j.pop(abs(int(user_answer)) - 1))
     else:
         if len(i):
             temp.append(i.pop(random.randint(0,len(i) - 1)))
-
+else:
+    if len(i):
+        print("The game is over. You won!")
+    elif len(j):
+        print("The game is over. The computer won!")
+    else:
+        print("Status: The game is over. It's a draw!")
 
 
 
