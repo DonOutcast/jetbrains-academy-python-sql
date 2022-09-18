@@ -70,6 +70,19 @@ def print_game(spisok: list) -> None:
     print()
     print()
 
+def user() -> int:
+    launch = True
+    while launch:
+        try:
+            user_answer = int(input())
+        except ValueError:
+            print("Invalid input. Please try again.")
+        else:
+            if i <= len(j) and i >= -len(j):
+                launch = False
+            else:
+                print("Invalid input. Please try again.")
+
 
 domino = init_domino()
 i = check_have_snacke()
@@ -90,7 +103,7 @@ while len(i) >= 0 and len(j) >= 0:
         status = "Status: It's your turn to make a move. Enter your command."
     print("Status: ", status )
     while True:
-    user_answer = input()
+    user_answer = user()
     if user_answer > len(j) of < -len(j):
         print()
     if user_answer != '':
